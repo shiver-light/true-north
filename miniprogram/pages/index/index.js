@@ -7,7 +7,7 @@ Page({
       center: { latitude: 39.9042, longitude: 116.4074 },
       markers: [],
       polyline: [],
-      // 展示用字符串，避免 WXML 出现 undefined
+      // 展示用字符串，避免在 WXML 里 toFixed 导致 undefined
       bearingStr: "-",
       distanceStr: "-",
       altAStr: "-",
@@ -31,6 +31,7 @@ Page({
       wx.getLocation({
         type: 'gcj02',
         isHighAccuracy: true,
+        enableHighAccuracy: true,
         highAccuracyExpireTime: 8000,
         success: (loc) => this.setData({ center: { latitude: loc.latitude, longitude: loc.longitude } }),
         fail: () => {
@@ -85,7 +86,7 @@ Page({
       wx.showToast({ title: '已清空', icon: 'none' });
     },
   
-    // 计算方位角 + 距离（并把展示字符串准备好）
+    // 点击计算：方位角 + 距离，并准备展示字符串
     computeBearingAndDistance() {
       const { A, B } = this.data;
       if (!A || !B) {
@@ -114,27 +115,48 @@ Page({
     },
   
     clearResults() {
+      // 采完点后先清空上次的计算结果（海拔即时显示在 setA/B 时已更新）
       this.setData({ bearingStr: "-", distanceStr: "-" });
     },
   
-    // —— 工具函数 ——
+    // —— 定位：双请求拿到可用海拔 ——
+    // 1) gcj02：用于 <map> 展示
+    // 2) wgs84 + altitude: true：更大概率拿到 altitude
     getCurrentLocation() {
-      return new Promise((resolve, reject) => {
+      const getGCJ02 = () => new Promise((resolve, reject) => {
         wx.getLocation({
           type: 'gcj02',
           isHighAccuracy: true,
+          enableHighAccuracy: true,
           highAccuracyExpireTime: 8000,
-          altitude: true, // 尽可能启用海拔
           success: (res) => resolve({
             latitude: res.latitude,
-            longitude: res.longitude,
-            altitude: (typeof res.altitude === 'number') ? res.altitude : null
+            longitude: res.longitude
           }),
           fail: reject
         });
       });
+  
+      const getWGS84Alt = () => new Promise((resolve) => {
+        wx.getLocation({
+          type: 'wgs84',
+          altitude: true,
+          isHighAccuracy: true,
+          enableHighAccuracy: true,
+          highAccuracyExpireTime: 8000,
+          success: (res) => resolve({
+            altitude: (typeof res.altitude === 'number') ? res.altitude : null
+          }),
+          fail: () => resolve({ altitude: null }) // 失败不影响主流程
+        });
+      });
+  
+      return Promise.all([getGCJ02(), getWGS84Alt()]).then(([gcj, wgsAlt]) => {
+        return { ...gcj, altitude: wgsAlt.altitude }; // 经纬度用 gcj02，海拔用 wgs84
+      });
     },
   
+    // —— 地理计算 —— 
     // 初始方位角：从真北顺时针 0–360°
     initialBearing(A, B) {
       const toRad = (d) => d * Math.PI / 180;
@@ -153,7 +175,7 @@ Page({
       return deg;
     },
   
-    // Haversine 直线距离（近似地球大圆距离）单位：米
+    // Haversine 大圆距离（米）
     haversineDistance(A, B) {
       const R = 6371000; // 地球半径（米）
       const toRad = (d) => d * Math.PI / 180;
@@ -169,7 +191,7 @@ Page({
       return R * c; // 米
     },
   
-    // —— 展示字符串格式化 —— 
+    // —— 展示格式化 —— 
     formatBearing(deg) {
       if (typeof deg !== 'number' || !isFinite(deg)) return '-';
       return deg.toFixed(3) + '°';
@@ -198,6 +220,7 @@ Page({
       }
     },
   
+    // —— 地图渲染 —— 
     refreshMap() {
       const { A, B } = this.data;
       const markers = [];
@@ -228,6 +251,7 @@ Page({
       this.setData({ markers, polyline });
     },
   
+    // —— 通用提示 —— 
     toastErr(err) {
       wx.showToast({ title: (err && err.errMsg) ? err.errMsg : '获取定位失败', icon: 'none' });
     }
