@@ -1,0 +1,46 @@
+<view class="container">
+  <map
+    id="map"
+    longitude="{{center.longitude}}"
+    latitude="{{center.latitude}}"
+    scale="15"
+    style="width:100%;height:50vh"
+    markers="{{markers}}"
+    polyline="{{polyline}}"
+    enable-3D="false"
+    show-location="true"
+  />
+
+  <view class="row">
+    <button type="primary" bindtap="setAFromCurrent">当前→A</button>
+    <button bindtap="setBFromCurrent">当前→B</button>
+    <button bindtap="gotoA" disabled="{{!A}}">定位到A</button>
+    <button bindtap="gotoB" disabled="{{!B}}">定位到B</button>
+  </view>
+
+  <view class="row">
+    <button type="warn" bindtap="clearAll">清空A/B</button>
+    <button bindtap="computeBearingAndDistance" disabled="{{!A || !B}}">计算</button>
+  </view>
+
+  <view class="panel">
+    <view class="k">A：</view>
+    <view class="v">{{A ? (A.latitude + ", " + A.longitude) : "未设置"}}</view>
+    <view class="k">A海拔：</view>
+    <view class="v">{{altAStr}}</view>
+
+    <view class="k">B：</view>
+    <view class="v">{{B ? (B.latitude + ", " + B.longitude) : "未设置"}}</view>
+    <view class="k">B海拔：</view>
+    <view class="v">{{altBStr}}</view>
+
+    <view class="k">AB方位角：</view>
+    <view class="v">{{bearingStr}}</view>
+
+    <view class="k">AB直线距离：</view>
+    <view class="v">{{distanceStr}}</view>
+
+    <view class="k">ΔH（B - A）：</view>
+    <view class="v">{{altDiffStr}}</view>
+  </view>
+</view>

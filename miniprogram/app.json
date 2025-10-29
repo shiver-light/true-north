@@ -1,0 +1,9 @@
+{
+    "pages": ["pages/index/index"],
+    "window": { "navigationBarTitleText": "真北工具" },
+    "permission": {
+      "scope.userLocation": { "desc": "用于采集坐标点A/B并在地图上显示与计算方位/距离/海拔" }
+    },
+    "requiredPrivateInfos": ["getLocation"]
+  }
+  
