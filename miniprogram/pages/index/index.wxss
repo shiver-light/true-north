@@ -1,6 +1,14 @@
 .container { display:flex; flex-direction:column; gap:12rpx; padding:16rpx; }
 .row { display:flex; gap:12rpx; flex-wrap:wrap; }
-.panel { background:#f7f7f7; padding:16rpx; border-radius:12rpx; line-height:1.8; display:grid; grid-template-columns: 1fr 2.2fr; gap:8rpx 12rpx; }
+.panel {
+  background:#f7f7f7; padding:16rpx; border-radius:12rpx;
+  line-height:1.8; display:grid; grid-template-columns: 1fr 2.2fr; gap:8rpx 12rpx;
+}
 .k { color:#666; }
 .v { color:#111; word-break:break-all; }
 button { min-width: 200rpx; }
+
+.pickbar { display:flex; align-items:center; gap:12rpx; flex-wrap:wrap; margin-bottom: 12rpx; }
+.pickbtn { min-width: 160rpx; }
+.pickbtn.active { background:#0081ff; color:#fff; }
+.pickhint { color:#666; font-size: 24rpx; }

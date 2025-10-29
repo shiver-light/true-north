@@ -1,4 +1,14 @@
 <view class="container">
+  <!-- 拾取模式提示条 -->
+  <view class="pickbar">
+    <button class="pickbtn {{pickTarget==='A'?'active':''}}" bindtap="startPickA">拾取到A</button>
+    <button class="pickbtn {{pickTarget==='B'?'active':''}}" bindtap="startPickB">拾取到B</button>
+    <button class="pickbtn" bindtap="stopPick">取消拾取</button>
+    <text class="pickhint">
+      {{ pickTarget==='none' ? '（点击“拾取到A/B”后，再点地图选择位置）' : ('拾取模式：点击地图写入 ' + pickTarget) }}
+    </text>
+  </view>
+
   <map
     id="map"
     longitude="{{center.longitude}}"
@@ -9,6 +19,7 @@
     polyline="{{polyline}}"
     enable-3D="false"
     show-location="true"
+    bindtap="onMapTap"
   />
 
   <view class="row">
