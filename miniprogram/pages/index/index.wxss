@@ -1,5 +1,10 @@
 .container { display:flex; flex-direction:column; gap:12rpx; padding:16rpx; }
 .row { display:flex; gap:12rpx; flex-wrap:wrap; }
+
+.toolrow { display:flex; flex-direction:column; gap:12rpx; }
+.switchrow { display:flex; align-items:center; gap:12rpx; }
+.switchlabel { color:#111; }
+
 .panel {
   background:#f7f7f7; padding:16rpx; border-radius:12rpx;
   line-height:1.8; display:grid; grid-template-columns: 1fr 2.2fr; gap:8rpx 12rpx;

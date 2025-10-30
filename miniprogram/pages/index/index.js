@@ -4,6 +4,7 @@ const I18N = {
   zh: {
     title: '真北工具',
     langHint: '切换语言 / Switch language',
+    satellite: '卫星图',
     pickToA: '拾取到A',
     pickToB: '拾取到B',
     cancelPick: '取消拾取',
@@ -18,7 +19,7 @@ const I18N = {
     unset: '未设置',
     altA: 'A海拔：',
     altB: 'B海拔：',
-    bearingLabel: 'AB直线方位角：',
+    bearingLabel: 'AB直线方位角（自真北顺时针）：',
     distanceLabel: 'AB直线距离：',
     altDiffLabel: '高度差 ΔH（B - A）：',
     toastSetA: '已设置 A（无海拔）',
@@ -37,6 +38,7 @@ const I18N = {
   en: {
     title: 'True North Tool',
     langHint: 'Switch language / 切换语言',
+    satellite: 'Satellite',
     pickToA: 'Pick to A',
     pickToB: 'Pick to B',
     cancelPick: 'Cancel',
@@ -83,13 +85,15 @@ Page({
     altBStr: "-",
     altDiffStr: "-",
     pickTarget: 'none',
+    // 图层
+    satellite: false,
     // 语言
     lang: 'zh',
     t: I18N.zh
   },
 
   onLoad() {
-    // 初始化语言：优先本地存储，其次系统语言前缀
+    // 语言初始化
     const savedLang = wx.getStorageSync('lang');
     let lang = savedLang || 'zh';
     try {
@@ -100,13 +104,15 @@ Page({
         if (prefix.startsWith('zh')) lang = 'zh';
       }
     } catch (_) {}
-
     this.applyLang(lang, false);
 
-    // 读取 A/B
+    // 卫星图持久化
+    const savedSat = wx.getStorageSync('satellite');
+    if (typeof savedSat === 'boolean') this.setData({ satellite: savedSat });
+
+    // 恢复 A/B
     const A = wx.getStorageSync('pointA') || null;
     const B = wx.getStorageSync('pointB') || null;
-
     this.setData({
       A, B,
       altAStr: A ? this.formatAltitude(A.altitude) : "-",
@@ -116,7 +122,7 @@ Page({
         : "-"
     });
 
-    // 当前定位用于居中
+    // 定位居中
     wx.getLocation({
       type: 'gcj02',
       isHighAccuracy: true,
@@ -136,6 +142,13 @@ Page({
     wx.setStorageSync('lang', lang);
     wx.setNavigationBarTitle({ title: t.title });
     if (toast) wx.showToast({ title: lang === 'zh' ? '已切换到中文' : 'Switched to English', icon: 'none' });
+  },
+
+  /* ===== 卫星图开关 ===== */
+  toggleSatellite(e) {
+    const on = !!e.detail.value;
+    this.setData({ satellite: on });
+    wx.setStorageSync('satellite', on);
   },
 
   /* ===== 地图拾取 ===== */

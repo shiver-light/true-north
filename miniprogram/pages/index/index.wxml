@@ -6,14 +6,21 @@
     <text class="langhint">{{t.langHint}}</text>
   </view>
 
-  <!-- 拾取模式提示条 -->
-  <view class="pickbar">
-    <button class="pickbtn {{pickTarget==='A'?'active':''}}" bindtap="startPickA">{{t.pickToA}}</button>
-    <button class="pickbtn {{pickTarget==='B'?'active':''}}" bindtap="startPickB">{{t.pickToB}}</button>
-    <button class="pickbtn" bindtap="stopPick">{{t.cancelPick}}</button>
-    <text class="pickhint">
-      {{ pickTarget==='none' ? t.pickHintIdle : (t.pickHintActive.replace('{target}', pickTarget)) }}
-    </text>
+  <!-- 图层/拾取工具条 -->
+  <view class="toolrow">
+    <view class="switchrow">
+      <text class="switchlabel">{{t.satellite}}</text>
+      <switch checked="{{satellite}}" bindchange="toggleSatellite" />
+    </view>
+
+    <view class="pickbar">
+      <button class="pickbtn {{pickTarget==='A'?'active':''}}" bindtap="startPickA">{{t.pickToA}}</button>
+      <button class="pickbtn {{pickTarget==='B'?'active':''}}" bindtap="startPickB">{{t.pickToB}}</button>
+      <button class="pickbtn" bindtap="stopPick">{{t.cancelPick}}</button>
+      <text class="pickhint">
+        {{ pickTarget==='none' ? t.pickHintIdle : (t.pickHintActive.replace('{target}', pickTarget)) }}
+      </text>
+    </view>
   </view>
 
   <map
@@ -26,6 +33,7 @@
     polyline="{{polyline}}"
     enable-3D="false"
     show-location="true"
+    enable-satellite="{{satellite}}"
     bindtap="onMapTap"
   />
 
