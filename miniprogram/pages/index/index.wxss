@@ -1,19 +1,83 @@
-.container { display:flex; flex-direction:column; gap:12rpx; padding:16rpx; }
-.row { display:flex; gap:12rpx; flex-wrap:wrap; }
+/* ===== 页面与卡片 ===== */
+.page { padding: 16rpx; display: flex; flex-direction: column; gap: 16rpx; background: #fafafa; }
+.card { background: #fff; border-radius: 20rpx; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06); }
 
-.toolrow { display:flex; flex-direction:column; gap:12rpx; }
-.switchrow { display:flex; align-items:center; gap:12rpx; }
-.switchlabel { color:#111; }
+/* ===== 地图卡片 ===== */
+.map-card { position: relative; overflow: hidden; }
+.map { width: 100%; height: 60vh; border-radius: 20rpx; }
 
-.panel {
-  background:#f7f7f7; padding:16rpx; border-radius:12rpx;
-  line-height:1.8; display:grid; grid-template-columns: 1fr 2.2fr; gap:8rpx 12rpx;
+/* ===== 顶部浮层：语言 + 卫星图 ===== */
+.floating-tools {
+  position: absolute; z-index: 10; top: 16rpx; left: 16rpx; right: 16rpx;
+  display: flex; align-items: center; justify-content: space-between; gap: 16rpx;
 }
-.k { color:#666; }
-.v { color:#111; word-break:break-all; }
-button { min-width: 200rpx; }
+.seg {
+  background: rgba(255,255,255,0.92);
+  border-radius: 999rpx;
+  display: inline-flex; overflow: hidden;
+  box-shadow: 0 4rpx 14rpx rgba(0,0,0,0.08);
+}
+.seg.wide { width: 100%; }
+.seg-item { padding: 14rpx 28rpx; font-size: 26rpx; color: #333; transition: background 0.2s; }
+.seg-item.active { background: #0081ff; color: #fff; }
+.toggle { display: flex; align-items: center; gap: 12rpx; background: rgba(255,255,255,0.92); padding: 10rpx 18rpx; border-radius: 999rpx; box-shadow: 0 4rpx 14rpx rgba(0,0,0,0.08); }
+.toggle-text { font-size: 26rpx; color: #222; }
+.toggle-switch { transform: scale(0.88); }
 
-.langbar, .pickbar { display:flex; align-items:center; gap:12rpx; flex-wrap:wrap; }
-.langbtn, .pickbtn { min-width: 160rpx; }
-.langbtn.active, .pickbtn.active { background:#0081ff; color:#fff; }
-.langhint, .pickhint { color:#666; font-size: 24rpx; }
+/* ===== 拾取状态条 ===== */
+.pickbar { position: absolute; left: 16rpx; right: 16rpx; bottom: 16rpx; z-index: 9; display: flex; flex-direction: column; gap: 12rpx; }
+.pick-hint { color: #fff; font-size: 24rpx; background: rgba(0,0,0,0.45); padding: 8rpx 12rpx; border-radius: 12rpx; }
+
+/* 分段按钮（button 版，支持禁用） */
+.seg-btn { appearance: none; border: 0; background: transparent; padding: 14rpx 28rpx; font-size: 26rpx; color: #333; border-radius: 0; }
+.seg-btn.active { background: #0081ff; color: #fff; }
+.seg-btn[disabled] { opacity: 0.5; }
+
+/* ===== 操作按钮区 ===== */
+.actions { display: flex; flex-direction: column; gap: 12rpx; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; }
+
+/* 通用按钮（更大内边距 + 圆角 + 轻拟物） */
+.btn {
+  border-radius: 24rpx;
+  padding: 28rpx 32rpx;
+  font-size: 30rpx;
+  border: none;
+  line-height: 1.2;
+  letter-spacing: 1rpx;
+  text-align: center;
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+}
+.btn.primary { background: linear-gradient(180deg, #0081ff, #0066cc); color: #fff; box-shadow: 0 4rpx 10rpx rgba(0,129,255,0.3); }
+.btn.success { background: linear-gradient(180deg, #22c55e, #16a34a); color: #fff; box-shadow: 0 4rpx 10rpx rgba(34,197,94,0.3); }
+.btn.danger  { background: linear-gradient(180deg, #ef4444, #dc2626); color: #fff; box-shadow: 0 4rpx 10rpx rgba(239,68,68,0.3); }
+.btn.ghost   { background: #fff; color: #111; border: 2rpx solid #e5e7eb; box-shadow: 0 4rpx 8rpx rgba(0,0,0,0.05); }
+
+/* 按钮禁用/按下交互 */
+.btn[disabled] { opacity: 0.55; filter: grayscale(10%); box-shadow: none; }
+.btn:not([disabled]):active { transform: scale(0.97); opacity: 0.92; }
+
+/* ===== 信息面板 ===== */
+.info-card { padding: 20rpx 22rpx; }
+.row { display: grid; grid-template-columns: 1.2fr 2.2fr; align-items: center; gap: 12rpx; padding: 12rpx 6rpx; }
+.k { color: #666; font-size: 26rpx; }
+.v { color: #111; font-size: 28rpx; }
+.v.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+.v.strong { font-weight: 600; }
+.divider { height: 1px; background: #eee; margin: 6rpx 0 2rpx; border-radius: 1px; }
+
+/* ===== 深色模式 ===== */
+@media (prefers-color-scheme: dark) {
+  .page { background: #0b0b0b; }
+  .card { background: #121212; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.35); }
+  .seg { background: rgba(0,0,0,0.5); }
+  .seg-item { color: #e5e7eb; }
+  .toggle { background: rgba(0,0,0,0.5); }
+  .toggle-text { color: #e5e7eb; }
+  .pick-hint { background: rgba(255,255,255,0.18); }
+  .k { color: #a3a3a3; }
+  .v { color: #fafafa; }
+  .btn.ghost { background: transparent; color: #e5e7eb; border-color: #2a2a2a; }
+  .divider { background: #2a2a2a; }
+}
