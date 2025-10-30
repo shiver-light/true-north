@@ -8,7 +8,7 @@
 .v { color:#111; word-break:break-all; }
 button { min-width: 200rpx; }
 
-.pickbar { display:flex; align-items:center; gap:12rpx; flex-wrap:wrap; margin-bottom: 12rpx; }
-.pickbtn { min-width: 160rpx; }
-.pickbtn.active { background:#0081ff; color:#fff; }
-.pickhint { color:#666; font-size: 24rpx; }
+.langbar, .pickbar { display:flex; align-items:center; gap:12rpx; flex-wrap:wrap; }
+.langbtn, .pickbtn { min-width: 160rpx; }
+.langbtn.active, .pickbtn.active { background:#0081ff; color:#fff; }
+.langhint, .pickhint { color:#666; font-size: 24rpx; }

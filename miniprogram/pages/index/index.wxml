@@ -1,11 +1,18 @@
 <view class="container">
+  <!-- 语言切换 -->
+  <view class="langbar">
+    <button class="langbtn {{lang==='zh'?'active':''}}" bindtap="switchToZh">中文</button>
+    <button class="langbtn {{lang==='en'?'active':''}}" bindtap="switchToEn">EN</button>
+    <text class="langhint">{{t.langHint}}</text>
+  </view>
+
   <!-- 拾取模式提示条 -->
   <view class="pickbar">
-    <button class="pickbtn {{pickTarget==='A'?'active':''}}" bindtap="startPickA">拾取到A</button>
-    <button class="pickbtn {{pickTarget==='B'?'active':''}}" bindtap="startPickB">拾取到B</button>
-    <button class="pickbtn" bindtap="stopPick">取消拾取</button>
+    <button class="pickbtn {{pickTarget==='A'?'active':''}}" bindtap="startPickA">{{t.pickToA}}</button>
+    <button class="pickbtn {{pickTarget==='B'?'active':''}}" bindtap="startPickB">{{t.pickToB}}</button>
+    <button class="pickbtn" bindtap="stopPick">{{t.cancelPick}}</button>
     <text class="pickhint">
-      {{ pickTarget==='none' ? '（点击“拾取到A/B”后，再点地图选择位置）' : ('拾取模式：点击地图写入 ' + pickTarget) }}
+      {{ pickTarget==='none' ? t.pickHintIdle : (t.pickHintActive.replace('{target}', pickTarget)) }}
     </text>
   </view>
 
@@ -23,35 +30,35 @@
   />
 
   <view class="row">
-    <button type="primary" bindtap="setAFromCurrent">当前→A</button>
-    <button bindtap="setBFromCurrent">当前→B</button>
-    <button bindtap="gotoA" disabled="{{!A}}">定位到A</button>
-    <button bindtap="gotoB" disabled="{{!B}}">定位到B</button>
+    <button type="primary" bindtap="setAFromCurrent">{{t.currentToA}}</button>
+    <button bindtap="setBFromCurrent">{{t.currentToB}}</button>
+    <button bindtap="gotoA" disabled="{{!A}}">{{t.gotoA}}</button>
+    <button bindtap="gotoB" disabled="{{!B}}">{{t.gotoB}}</button>
   </view>
 
   <view class="row">
-    <button type="warn" bindtap="clearAll">清空A/B</button>
-    <button bindtap="computeBearingAndDistance" disabled="{{!A || !B}}">计算</button>
+    <button type="warn" bindtap="clearAll">{{t.clearAB}}</button>
+    <button bindtap="computeBearingAndDistance" disabled="{{!A || !B}}">{{t.compute}}</button>
   </view>
 
   <view class="panel">
     <view class="k">A：</view>
-    <view class="v">{{A ? (A.latitude + ", " + A.longitude) : "未设置"}}</view>
-    <view class="k">A海拔：</view>
+    <view class="v">{{A ? (A.latitude + ", " + A.longitude) : t.unset}}</view>
+    <view class="k">{{t.altA}}</view>
     <view class="v">{{altAStr}}</view>
 
     <view class="k">B：</view>
-    <view class="v">{{B ? (B.latitude + ", " + B.longitude) : "未设置"}}</view>
-    <view class="k">B海拔：</view>
+    <view class="v">{{B ? (B.latitude + ", " + B.longitude) : t.unset}}</view>
+    <view class="k">{{t.altB}}</view>
     <view class="v">{{altBStr}}</view>
 
-    <view class="k">AB方位角：</view>
+    <view class="k">{{t.bearingLabel}}</view>
     <view class="v">{{bearingStr}}</view>
 
-    <view class="k">AB直线距离：</view>
+    <view class="k">{{t.distanceLabel}}</view>
     <view class="v">{{distanceStr}}</view>
 
-    <view class="k">ΔH（B - A）：</view>
+    <view class="k">{{t.altDiffLabel}}</view>
     <view class="v">{{altDiffStr}}</view>
   </view>
 </view>
